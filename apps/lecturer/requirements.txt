@@ -1,0 +1,18 @@
+# Matches the reference repo's stack (Flask + PuLP + pandas + numpy + openpyxl + dotenv)
+Flask
+python-dotenv
+pandas
+numpy
+PuLP
+openpyxl
+
+# Added beyond the reference stack, and why:
+# PuLP is LP/MILP-only and cannot express Algorithm 3's non-linear objective —
+# scipy is required to keep that model mathematically unmodified from the source paper.
+scipy
+
+# Testing
+pytest
+
+# Deployment
+gunicorn

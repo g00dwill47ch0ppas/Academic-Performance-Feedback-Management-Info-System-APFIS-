@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ module.code }}{% endblock %}
+
+{% block help %}
+    <div class="help-step">
+        <span class="help-step-num">1</span>
+        <span class="help-step-text">Change the <strong>module code</strong> and/or <strong>name</strong> here. The plan and students are kept.</span>
+    </div>
+    <div class="help-step">
+        <span class="help-step-num">2</span>
+        <span class="help-step-text">Renaming the code is allowed only if the new code is not already in use by another module.</span>
+    </div>
+    <div class="help-step">
+        <span class="help-step-num">3</span>
+        <span class="help-step-text">Use <strong>Manage modules & import</strong> in the navigation panel to delete a module or import one from file.</span>
+    </div>
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('modules.list_modules') }}" class="back-link">
+    <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"></use></svg>
+    Back to modules
+</a>
+
+<div class="page-header-row">
+    <div class="page-head">
+        <h1>Edit module</h1>
+        <p>{{ module.code }} &mdash; {{ module.label }}</p>
+    </div>
+    <span class="badge badge-muted">
+        {{ student_count }} student{{ 's' if student_count != 1 else '' }} &middot;
+        {{ assessment_count }} assessment{{ 's' if assessment_count != 1 else '' }}
+    </span>
+</div>
+
+<div class="panel">
+    <h2>Module details</h2>
+    <form method="post" class="inline-form">
+        <label for="module_code">Module code</label>
+        <input type="text" id="module_code" name="module_code" value="{{ module.code }}" required>
+        <label for="module_name">Module name</label>
+        <input type="text" id="module_name" name="module_name" value="{{ module.name }}">
+        <button type="submit">
+            <svg class="icon" aria-hidden="true"><use href="#i-save"></use></svg>
+            Save changes
+        </button>
+    </form>
+    <p class="muted">Renaming the code is allowed as long as the new code is not already in use.
+    The assessment plan and students are kept.</p>
+</div>
+{% endblock %}
+
+

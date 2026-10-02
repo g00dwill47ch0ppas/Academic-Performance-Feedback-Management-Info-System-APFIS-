@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Add' if student is none else 'Edit' }} student{% endblock %}
+
+{% block help %}
+    <div class="help-step">
+        <span class="help-step-num">1</span>
+        <span class="help-step-text">Type an <strong>anonymised student code</strong> (e.g. STU016) &mdash; never real names or ID numbers.</span>
+    </div>
+    <div class="help-step">
+        <span class="help-step-num">2</span>
+        <span class="help-step-text">Fill in a mark (0&ndash;100) for each assessment, or leave it blank if that assessment has not been written yet.</span>
+    </div>
+    <div class="help-step">
+        <span class="help-step-num">3</span>
+        <span class="help-step-text">Click <strong>Add student</strong> (or <strong>Save changes</strong> when editing).</span>
+    </div>
+    <div class="help-step">
+        <span class="help-step-num">4</span>
+        <span class="help-step-text">When adding a new student, you can also <strong>Import students</strong> from a CSV with one mark column per assessment.</span>
+    </div>
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('home.students') }}" class="back-link">
+    <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"></use></svg>
+    Back to students
+</a>
+
+<div class="page-head">
+    <h1>{{ 'Add student' if student is none else 'Edit student' }}</h1>
+    <p>{{ module.label }}</p>
+</div>
+
+<form method="post" action="{{ form_action }}">
+    <div class="panel">
+        <h2>Student</h2>
+        <div class="inline-form">
+            <label for="student_code">Student code (anonymised)</label>
+            <input type="text" id="student_code" name="student_code"
+                   placeholder="e.g. STU016 or 46997245" value="{{ form_code }}" required>
+        </div>
+        <p class="muted">Only anonymised codes may be entered &mdash; never real names or
+        ID numbers (research ethics requirement).</p>
+    </div>
+
+    {% if module.assessments %}
+    <div class="panel">
+        <h2>Marks per assessment</h2>
+        <p class="muted">Leave a mark blank if that assessment has not been written yet.
+        Marks are out of 100.</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Assessment</th><th>Weight</th><th>Mark</th></tr>
+                </thead>
+                <tbody>
+                    {% for a in module.assessments %}
+                    <tr>
+                        <td>{{ a.name }}</td>
+                        <td>{{ (a.weight * 100)|round(1) }}%</td>
+                        <td>
+                            <input type="number" name="mark_{{ loop.index0 }}" min="0" max="100"
+                                   step="0.1" placeholder="&mdash;"
+                                   value="{{ marks_raw[loop.index0] }}">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="panel">
+        <h2>No assessment plan yet</h2>
+        <p class="muted">This module has no assessment plan yet, so only the student code
+        can be saved. Add assessments under <em>Assessment plan</em> first if you want to
+        record marks.</p>
+    </div>
+    {% endif %}
+
+    <div class="row-actions">
+        <button type="submit" name="source" value="single">
+            <svg class="icon" aria-hidden="true"><use href="#i-save"></use></svg>
+            {{ 'Add student' if student is none else 'Save changes' }}
+        </button>
+        <a class="btn btn-secondary" href="{{ url_for('home.students') }}">
+            <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+            Cancel
+        </a>
+    </div>
+</form>
+
+{% if student is none %}
+<div class="panel" style="margin-top:1.5rem">
+    <h2>Import students from a CSV</h2>
+    <p class="muted">Upload a CSV with a <code>student_code</code> column and one mark column per
+    assessment, named <code>mark_0</code>, <code>mark_1</code>, ... in plan order.
+    Blank marks mean the assessment hasn't been written yet.</p>
+    <form method="post" action="{{ url_for('students.add_student') }}" enctype="multipart/form-data" class="inline-form">
+        <input type="hidden" name="source" value="csv">
+        <label for="import_file">Students file (.csv)</label>
+        <input type="file" id="import_file" name="import_file" accept=".csv" required>
+        <button type="submit">
+            <svg class="icon" aria-hidden="true"><use href="#i-upload"></use></svg>
+            Import students
+        </button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}
+
+
