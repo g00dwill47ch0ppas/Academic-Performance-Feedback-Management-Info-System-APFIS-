@@ -1,0 +1,465 @@
+<!--
+==================================================
+Phase 1
+Develop Personal Academic Model
+==================================================
+-->
+
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- ==========================================
+         Page Heading
+    =========================================== -->
+
+    <div class="text-center mb-5">
+
+        <h1>Phase 1</h1>
+
+        <h3>Develop Your Personal Academic Model</h3>
+
+        <p class="text-muted">
+            Build your personalised assessment model using your lecturer's assessment plan.
+        </p>
+
+    </div>
+
+    <!-- ==========================================
+         Student Information
+    =========================================== -->
+
+    <div class="card shadow-sm mb-5">
+
+        <div class="card-header">
+
+            <h4>Student Information</h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <label class="form-label">
+                        First Name
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="firstName"
+                        placeholder="Enter first name">
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Surname
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="surname"
+                        placeholder="Enter surname">
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Student Number
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="studentNumber"
+                        placeholder="e.g. 45000794">
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Module
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="module"
+                        placeholder="e.g. CMPG321">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         Assessment Builder
+    =========================================== -->
+
+    <div class="card shadow-sm mb-5">
+
+        <div class="card-header">
+
+            <h4>
+
+                Let's Build Your Assessment Plan
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <p class="text-muted">
+
+                Select one assessment category at a time. Continue adding
+                assessments until your assessment plan matches the one
+                supplied by your lecturer.
+
+            </p>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Assessment Category
+
+                </label>
+
+                <select
+                    class="form-select"
+                    id="assessmentCategory">
+
+                    <option value="" selected disabled>
+
+                        Select Category
+
+                    </option>
+
+                    <option value="Semester Test">
+
+                        Semester Test
+
+                    </option>
+
+                    <option value="Class Test">
+
+                        Class Test
+
+                    </option>
+
+                    <option value="Assignment">
+
+                        Assignment
+
+                    </option>
+
+                    <option value="Project">
+
+                        Project
+
+                    </option>
+
+                    <option value="Practical Assignment">
+
+                        Practical Assignment
+
+                    </option>
+
+                    <option value="Attendance">
+
+                        Attendance
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div
+                class="mb-3"
+                id="quantityContainer"
+                style="display:none;">
+
+                <label class="form-label">
+
+                    Number of Assessments
+
+                </label>
+
+                <input
+                    type="number"
+                    class="form-control"
+                    id="assessmentQuantity"
+                    min="1">
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label">
+
+                    Weighting (%)
+
+                </label>
+
+                <input
+                    type="number"
+                    class="form-control"
+                    id="assessmentWeight"
+                    min="1"
+                    max="100">
+
+            </div>
+
+            <button
+                id="addAssessment"
+                class="btn btn-primary"
+                type="button">
+
+                Add Assessment
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         Assessment Summary
+    =========================================== -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header">
+
+            <h4>
+
+                Assessment Summary
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <table
+                class="table table-hover"
+                id="assessmentTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Assessment</th>
+
+                        <th>Quantity</th>
+
+                        <th>Weighting (%)</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="assessmentTableBody">
+
+                    <tr id="emptyRow">
+
+                        <td colspan="4" class="text-center text-muted">
+
+                            No assessments have been added yet.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div class="text-end mt-4">
+
+                <button
+                    id="continuePhase2"
+                    class="btn btn-primary"
+                    type="button">
+
+                    Continue to Phase 2
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================
+     Journey Introduction Modal
+========================================== -->
+
+<div
+    class="modal fade"
+    id="journeyModal"
+    tabindex="-1">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h4 class="modal-title">
+
+                    Welcome to the Student Performance Assistant
+
+                </h4>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+
+                    This application will guide you through four phases to
+                    develop a personalised academic model and identify ways
+                    to improve your participation mark.
+
+                </p>
+
+                <hr>
+
+                <ol>
+
+                    <li>
+                        Develop your assessment model.
+                    </li>
+
+                    <li>
+                        Generate your academic profile.
+                    </li>
+
+                    <li>
+                        Explore improvement plans.
+                    </li>
+
+                    <li>
+                        Save your personalised model.
+                    </li>
+
+                </ol>
+
+                <div class="alert alert-info">
+
+                    Your information is never stored online.
+                    Everything remains on your own computer.
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-primary"
+                    data-bs-dismiss="modal">
+
+                    Got It
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================
+     Confirmation Modal
+========================================== -->
+
+<div
+    class="modal fade"
+    id="confirmModelModal"
+    tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h4>
+
+                    Confirm Assessment Plan
+
+                </h4>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div id="confirmationContent">
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Edit Assessment Plan
+
+                </button>
+
+                <button type="button" id="confirmContinue" class="btn btn-primary">
+                
+                    Continue to Phase 2
+                
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const journeyModal = new bootstrap.Modal(
+        document.getElementById("journeyModal")
+    );
+
+    journeyModal.show();
+
+});
+
+</script>
+
+{% endblock %}

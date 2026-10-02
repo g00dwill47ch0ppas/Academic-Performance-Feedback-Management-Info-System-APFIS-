@@ -1,0 +1,139 @@
+.welcome-options{
+
+    margin-top:100px;
+
+    text-align:center;
+
+}
+
+.cards-container{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:40px;
+
+    margin-top:40px;
+
+    flex-wrap:wrap;
+
+}
+
+.welcome-card{
+
+    width:350px;
+
+    background:white;
+
+    padding:35px;
+
+    border-radius:15px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.welcome-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.card-icon{
+
+    font-size:3rem;
+
+    color:var(--primary);
+
+    margin-bottom:20px;
+
+}
+
+.btn-primary{
+
+    display:inline-block;
+
+    margin-top:25px;
+
+    padding:12px 30px;
+
+    border-radius:8px;
+
+    background:var(--primary);
+
+    color:white;
+
+    text-decoration:none;
+
+    cursor:pointer;
+
+    transition:0.3s ease;
+}
+
+.btn-primary:hover{
+
+    color:white;
+
+    transform:translateY(-2px);
+
+}
+
+.btn-purple {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: #ffffff;
+}
+
+.btn-purple:hover {
+    background-color: #5a32a3;
+    border-color: #5a32a3;
+    color: #ffffff;
+}
+
+/* ==========================================
+   DARK MODE - CARDS
+========================================== */
+
+body.dark-mode .welcome-card {
+    background: #1e1e1e;
+    color: #f1f1f1;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-mode .welcome-card h3 {
+    color: #ffffff;
+}
+
+body.dark-mode .welcome-card p {
+    color: #bdbdbd;
+}
+
+body.dark-mode .card-icon {
+    color: var(--primary);
+}
+
+body.dark-mode .btn-primary {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+body.dark-mode .btn-primary:hover {
+    background: #5a32a3;
+    color: #ffffff;
+}
+
+body.dark-mode .btn-purple {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: #ffffff;
+}
+
+body.dark-mode .btn-purple:hover {
+    background-color: #5a32a3;
+    border-color: #5a32a3;
+    color: #ffffff;
+}

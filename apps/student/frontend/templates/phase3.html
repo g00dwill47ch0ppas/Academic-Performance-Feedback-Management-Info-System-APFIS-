@@ -1,0 +1,336 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- ==========================================
+         Page Heading
+    =========================================== -->
+
+    <div class="text-center mb-5">
+
+        <h1>Phase 3</h1>
+
+        <h3>Explore Your Improvement Options</h3>
+
+        <p class="text-muted">
+
+            Evaluate different improvement plans to determine the most
+            achievable pathway towards your desired participation mark.
+
+        </p>
+
+    </div>
+
+    <!-- ==========================================
+         Student Summary
+    =========================================== -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4>
+
+                Student Summary
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        First Name
+
+                    </label>
+
+                    <input id="phase3FirstName" class="form-control" readonly>
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        Surname
+
+                    </label>
+
+                    <input id="phase3Surname" class="form-control" readonly>
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        Student Number
+
+                    </label>
+
+                    <input id="phase3StudentNumber" class="form-control" readonly>
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        Module
+
+                    </label>
+
+                    <input id="phase3Module" class="form-control" readonly>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         Current Academic Profile
+    =========================================== -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4>
+
+                Current Academic Profile
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <h5>
+
+                        Current Participation Mark
+
+                    </h5>
+
+                    <h2 id="currentParticipation">
+
+                        0%
+
+                    </h2>
+
+                    <div class="progress mt-3">
+
+                        <div id="participationProgress" class="progress-bar" role="progressbar" style="width:0%;">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <h5>
+
+                        Academic Standing
+
+                    </h5>
+
+                    <h6 id="academicStanding">
+
+
+                        Not Calculated
+
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         Improvement Goal
+    =========================================== -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4>Improvement Options</h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <p class="text-muted">
+
+                The assessments remaining this semester are:
+
+            </p>
+
+            <div id="remainingAssessmentsSummary">
+
+            </div>
+
+            <hr>
+
+            <p>
+                Your improvement options range from
+
+                <strong id="minimumImprovement">
+                    0%
+                </strong>
+
+                to
+
+                <strong id="maximumImprovement">
+                    0%
+                </strong>
+
+                on your participation mark.
+            </p>
+
+            <hr>
+
+            <div class="row align-items-end">
+
+                <div class="col-md-6">
+
+                    <label for="delta-input" class="form-label">
+
+                        Desired Improvement
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <input type="number" id="delta-input" class="form-control" min="1" max="100" step="0.1"
+                            placeholder="e.g. 10">
+
+                        <span class="input-group-text">
+                            %
+                        </span>
+
+                    </div>
+
+                    <small class="text-muted">
+
+                        Enter how many percentage points you would like
+                        to improve your participation mark.
+
+                    </small>
+
+                </div>
+
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+
+                    <button id="showOptions" class="btn btn-primary">
+
+                        Show Options
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+         Recommended Improvement Plan
+    =========================================== -->
+
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-header">
+
+                <h4>Calculated Improvement Plans</h4>
+
+            </div>
+
+            <div class="card-body" id="improvementPlans">
+
+                <div id="improvementMessage" class="alert alert-info">
+
+                    Click
+                    <strong>Show Options</strong>
+                    to calculate the available improvement plans.
+
+                </div>
+
+                <div id="scenarioResults"></div>
+
+            </div>
+
+            <template id="scenarioTemplate">
+
+                <div class="card mb-3 scenario-card">
+
+                    <div class="card-header d-flex justify-content-between">
+
+                        <strong class="scenario-title">
+                            Scenario
+                        </strong>
+
+                        <span class="badge bg-primary scenario-improvement">
+                            +0%
+                        </span>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <p>
+                            <strong>Target Participation:</strong>
+                            <span class="scenario-target">
+                                0%
+                            </span>
+                        </p>
+
+                        <h6>Required Assessment Marks</h6>
+
+                        <div class="scenario-scores"></div>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+        </div>
+
+        <!-- ==========================================
+     Continue
+=========================================== -->
+
+<div class="text-center mt-4 mb-5">
+
+    <a
+        href="/phase4"
+        class="btn btn-primary btn-lg">
+
+        Continue to Phase 4
+
+    </a>
+
+</div>
+
+    </div>
+
+    {% endblock %}

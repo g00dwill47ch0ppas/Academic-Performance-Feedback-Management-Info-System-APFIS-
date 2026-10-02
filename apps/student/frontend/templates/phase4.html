@@ -1,0 +1,490 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<!-- ==========================================
+     Page Heading
+=========================================== -->
+
+<div class="text-center mb-5">
+
+    <h1>Phase 4</h1>
+
+    <h3>Student Performance Summary</h3>
+
+    <p class="text-muted">
+
+        Review your assessment framework, existing marks,
+        academic profile, and available improvement scenarios.
+
+    </p>
+
+</div>
+
+
+<!-- ==========================================
+     Student Information
+=========================================== -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <h4>
+            Student Information
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-3 mb-3">
+
+                <label class="form-label">
+                    First Name
+                </label>
+
+                <input id="phase4FirstName" class="form-control" readonly>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <label class="form-label">
+                    Surname
+                </label>
+
+                <input id="phase4Surname" class="form-control" readonly>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <label class="form-label">
+                    Student Number
+                </label>
+
+                <input id="phase4StudentNumber" class="form-control" readonly>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <label class="form-label">
+                    Module
+                </label>
+
+                <input id="phase4Module" class="form-control" readonly>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     Assessment Framework
+=========================================== -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <h4>
+            Assessment Framework
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <p class="text-muted">
+
+            Assessment structure for the current module.
+
+        </p>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>
+                            Assessment Category
+                        </th>
+
+                        <th>
+                            Number of Assessments
+                        </th>
+
+                        <th>
+                            Total Weight
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="assessmentFrameworkTable">
+
+                    <tr>
+
+                        <td colspan="3" class="text-center text-muted">
+
+                            No assessment framework available.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     Existing Assessment Marks
+=========================================== -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <h4>
+            Existing Assessment Marks
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <p class="text-muted">
+
+            Marks currently recorded for completed assessments.
+            Assessments without a recorded mark are shown as
+            <strong>—</strong>.
+
+        </p>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>
+                            Assessment
+                        </th>
+
+                        <th>
+                            Weight
+                        </th>
+
+                        <th>
+                            Existing Mark
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="existingMarksTable">
+
+                    <tr>
+
+                        <td colspan="3" class="text-center text-muted">
+
+                            No assessment marks available.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     Academic Profile
+=========================================== -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <h4>
+            Academic Profile
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row text-center">
+
+            <div class="col-md-3 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h6 class="text-muted">
+                        Current Participation
+                    </h6>
+
+                    <h3 id="phase4ParticipationMark">
+                        0%
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h6 class="text-muted">
+                        Academic Standing
+                    </h6>
+
+                    <h3 id="phase4AcademicStanding">
+                        Not Calculated
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h6 class="text-muted">
+                        Completed Assessments
+                    </h6>
+
+                    <h3 id="phase4CompletedAssessments">
+                        0
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h6 class="text-muted">
+                        Remaining Assessments
+                    </h6>
+
+                    <h3 id="phase4RemainingAssessments">
+                        0
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- <hr>
+
+        <h6>
+            Participation Progress
+        </h6>
+
+        <div class="progress mt-2">
+
+            <div id="phase4ParticipationProgress" class="progress-bar" role="progressbar" style="width: 0%;">
+
+                0%
+
+            </div>
+
+        </div> -->
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     Improvement Scenarios
+=========================================== -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <h4>
+            Improvement Scenarios
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row mb-3">
+
+            <div class="col-md-6">
+
+                <strong>
+                    Desired Improvement:
+                </strong>
+
+                <span id="phase4TargetImprovement">
+                    —
+                </span>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <strong>
+                    Target Participation:
+                </strong>
+
+                <span id="phase4TargetParticipation">
+                    —
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>
+                            Scenario
+                        </th>
+
+                        <th>
+                            Assessment Category
+                        </th>
+
+                        <th>
+                            Required Mark
+                        </th>
+
+                        <th>
+                            Target Participation
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="phase4ScenarioTable">
+
+                    <tr>
+
+                        <td colspan="4" class="text-center text-muted">
+
+                            No improvement scenarios available.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     CSV Export
+=========================================== -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <h4>
+            Save Your Progress
+        </h4>
+
+    </div>
+
+    <div class="card-body text-center">
+
+        <p class="text-muted">
+
+            Save your student information, assessment framework,
+            and existing assessment marks as a CSV file for future use.
+
+        </p>
+
+        <button id="saveCsv" class="btn btn-success btn-lg">
+
+            Save Student Data as CSV
+
+        </button>
+        <div>
+
+            <div id="csvDownloadMessage" class="alert alert-success text-center d-none" role="alert">
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     Navigation
+=========================================== -->
+
+<div class="d-flex justify-content-between mb-5">
+
+    <a href="/phase3" class="btn btn-secondary">
+
+        Back to Phase 3
+
+    </a>
+
+    <button id="finishApplication" class="btn btn-primary">
+
+        Finish
+
+    </button>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,259 @@
+/* ===========================
+   Layout
+=========================== */
+
+main{
+
+    width:100%;
+
+    max-width:1400px;
+
+    margin:auto;
+
+    padding:40px;
+
+}
+
+.welcome-section{
+
+    text-align:center;
+
+    padding:80px 20px;
+
+}
+
+.welcome-section h2{
+
+    font-size:2.5rem;
+
+    color:#4E2A84;
+
+    margin-bottom:20px;
+
+}
+
+.welcome-section p{
+
+    font-size:1.1rem;
+
+    color:#555;
+
+    max-width:700px;
+
+    margin:auto;
+
+    line-height:1.8;
+
+}
+
+/* ===========================
+   Hero Section
+=========================== */
+
+.hero{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:60px;
+
+    min-height:80vh;
+
+}
+
+.hero-content{
+
+    flex:1;
+
+}
+
+.hero-badge{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    background:var(--primary);
+
+    color:white;
+
+    border-radius:30px;
+
+    margin-bottom:20px;
+
+    font-size:0.9rem;
+
+}
+
+.hero h1{
+
+    font-size:3rem;
+
+    line-height:1.2;
+
+    margin-bottom:25px;
+
+    color:var(--primary);
+
+}
+
+.hero p{
+
+    font-size:1.1rem;
+
+    line-height:1.8;
+
+    margin-bottom:35px;
+
+    color:#555;
+
+}
+
+.hero-button{
+
+    background:var(--primary);
+
+    color:white;
+
+    border:none;
+
+    padding:15px 35px;
+
+    border-radius:10px;
+
+    font-size:1rem;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.hero-button:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.hero-image{
+
+    flex:1;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.hero-icon{
+
+    font-size:12rem;
+
+    color:var(--primary);
+
+    opacity:.15;
+
+}
+
+/* ==========================================
+   DARK MODE
+========================================== */
+
+body.dark-mode {
+    background-color: #121212;
+    color: #f1f1f1;
+}
+
+
+/* Main content */
+
+body.dark-mode main {
+    background-color: #121212;
+    color: #f1f1f1;
+}
+
+
+/* Cards */
+
+body.dark-mode .card {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+    border-color: #333333;
+}
+
+body.dark-mode .card-header {
+    background-color: #252525;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .card-body {
+    color: #f1f1f1;
+}
+
+
+/* Tables */
+
+body.dark-mode .table {
+    color: #f1f1f1;
+}
+
+body.dark-mode .table-light {
+    --bs-table-bg: #252525;
+    --bs-table-color: #ffffff;
+}
+
+body.dark-mode .table-bordered {
+    border-color: #444444;
+}
+
+
+/* Text */
+
+body.dark-mode .text-muted {
+    color: #aaaaaa !important;
+}
+
+
+/* Inputs */
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #252525;
+    color: #ffffff;
+    border-color: #444444;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+    background-color: #252525;
+    color: #ffffff;
+    border-color: #4E2A84;
+}
+
+
+/* Horizontal rules */
+
+body.dark-mode hr {
+    border-color: #444444;
+}
+
+
+/* Navbar */
+
+body.dark-mode .navbar {
+    background: #24133f;
+}
+
+
+/* Footer */
+
+body.dark-mode footer {
+    background-color: #171717;
+    color: #ffffff;
+}

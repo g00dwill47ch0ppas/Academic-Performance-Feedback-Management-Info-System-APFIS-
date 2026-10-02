@@ -1,0 +1,45 @@
+<section id="welcome-options" class="welcome-options">
+
+    <h2>Welcome!</h2>
+
+    <p>
+        Please tell us how you would like to continue.
+    </p>
+
+    <div class="cards-container">
+
+        <div class="welcome-card">
+
+            <i class="fa-solid fa-user-plus card-icon"></i>
+
+            <h3>New Student</h3>
+
+            <p>
+                I am using the Student Performance Assistant for the first time.
+            </p>
+
+            <a href="{{ url_for('home.phase1') }}" class="btn-primary">
+                Let's Begin
+            </a>
+
+        </div>
+
+        <div class="welcome-card">
+
+            <i class="fa-solid fa-file-import card-icon"></i>
+
+            <h3>Returning Student</h3>
+
+            <p>
+                Import the CSV file that you previously saved to continue where you left off.
+            </p>
+
+            <a href="{{ url_for('home.returning') }}" class="btn-primary">
+                Import CSV
+            </a>
+
+        </div>
+
+    </div>
+
+</section>

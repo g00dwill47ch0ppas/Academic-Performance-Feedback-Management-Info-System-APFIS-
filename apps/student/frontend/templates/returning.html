@@ -1,0 +1,78 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="text-center mb-5">
+
+    <h1>Returning Student</h1>
+
+    <h3>Import Your Saved CSV File</h3>
+
+    <p class="text-muted">
+        Select the CSV file you previously saved from the
+        Student Performance Assistant.
+    </p>
+
+</div>
+
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+        <h4>Import Student Data</h4>
+    </div>
+
+    <div class="card-body">
+
+        <div class="mb-4">
+
+            <label
+                for="returningCsvFile"
+                class="form-label fw-bold">
+
+                Select CSV File
+
+            </label>
+
+            <input
+                type="file"
+                id="CsvFile"
+                class="form-control"
+                accept=".csv">
+
+        </div>
+
+
+        <div class="text-center">
+
+            <button
+                id="importCsv"
+                class="btn btn-primary btn-lg">
+
+                Import CSV
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="d-flex justify-content-start mb-5">
+
+    <a
+        href="/"
+        class="btn btn-secondary">
+
+        Back
+
+    </a>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/returning.js') }}"></script>
+
+{% endblock %}
+
