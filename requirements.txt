@@ -1,0 +1,9 @@
+
+-r apps/lecturer/requirements.txt
+-r apps/student/requirements.txt
+
+# Landing page (gateway/gateway.py)
+flask
+
+# Lecturer test suite: pytest tests/ -v
+pytest
