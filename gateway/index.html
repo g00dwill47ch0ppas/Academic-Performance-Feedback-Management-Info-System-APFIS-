@@ -155,7 +155,7 @@
 
 <main>
   <h1>Academic performance monitoring</h1>
-  <p class="lead">Two systems, one entry point. Pick the one that matches your role and you'll be taken straight to it.</p>
+  <p class="lead">Are you a Lecturer or Student?</p>
 
   <div class="choices">
     <a class="choice lecturer" id="lecturer" href="#">
@@ -178,10 +178,10 @@
   <div id="notice" role="alert"></div>
 </main>
 
-<footer>Potchefstroom Campus</footer>
+<footer>G. Sebaetse, T. Ndlakuse</footer>
 
 <script>
-  // Change these if you run the systems on different ports or host them online.
+  // change ts if you run the systems on different ports or host them online.
   const SYSTEMS = {
     lecturer: { url: "http://localhost:5001", label: "lecturer system", start: "cd Academic-Performance-Monitor; flask --app app run --port 5001" },
     student:  { url: "http://localhost:5002", label: "student system",  start: "cd Student-Performance-Assistant; flask --app app run --port 5002" }
