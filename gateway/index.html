@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +6,7 @@
     <title>Academic Performance Monitoring — NWU</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         // Same theme key and class as the lecturer system, applied before first paint.
         try {
@@ -18,8 +17,8 @@
     </script>
     <style>
         /* ===========================================================
-           Gateway: uses the same visual system as the Lecturer DSS and
-           the Student Performance Assistant (palette, type, components).
+           Gateway popup: same visual system as the Lecturer DSS and the
+           Student Performance Assistant (palette, type, navbar, footer).
            =========================================================== */
         :root {
             --primary: #4E2A84;
@@ -31,18 +30,9 @@
             --text: #2D3436;
             --text-muted: #6c757d;
             --border: #e6e8ef;
-            --success: #27AE60;
-            --danger: #E74C3C;
-
             --radius: 14px;
             --radius-sm: 8px;
-            --shadow-sm: 0 2px 6px rgba(16, 24, 40, 0.06);
-            --shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 14px 40px rgba(78, 42, 132, 0.18);
-            --surface-tint: #faf8fd;
-            --tint: #f1edf7;
-            --danger-tint: #fdecea;
-            --success-tint: #e8f6ee;
         }
 
         html.dark-mode {
@@ -51,19 +41,13 @@
             --text: #f1f1f1;
             --text-muted: #b8b8b8;
             --border: #333333;
-            --surface-tint: #252525;
-            --tint: #302040;
-            --danger-tint: #3a1c1a;
-            --success-tint: #1b3227;
             --primary: #6A49A5;
             --primary-dark: #24133f;
-            --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
-            --shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
             --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.5);
         }
 
         * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        [hidden] { display: none !important; }
 
         body {
             margin: 0;
@@ -78,34 +62,23 @@
             transition: background-color 0.25s ease, color 0.25s ease;
         }
 
-        h1, h2, h3 {
-            font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
-            color: var(--primary);
-            line-height: 1.25;
-        }
-
-        a { color: var(--primary); text-decoration: none; }
-        [hidden] { display: none !important; }
-
         .svg-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
         .icon { width: 20px; height: 20px; display: block; }
 
-        /* ---------- Navbar ---------- */
+        /* ---------- Page behind the popup: navbar, backdrop art, footer ---------- */
         .navbar {
             position: sticky;
             top: 0;
             z-index: 1000;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
+            gap: 15px;
             height: 70px;
             padding: 0 30px;
             background: var(--primary);
             border-bottom: 4px solid var(--primary-dark);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
-        .navbar-left { display: flex; align-items: center; gap: 15px; min-width: 0; }
         .logo {
             flex: 0 0 auto;
             width: 50px;
@@ -119,7 +92,13 @@
         }
         .logo .icon { width: 24px; height: 24px; }
         .title-group { min-width: 0; }
-        .title-group h1 { margin: 0; font-size: 1.5rem; color: #ffffff; }
+        .title-group h1 {
+            margin: 0;
+            font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
+            font-size: 1.5rem;
+            line-height: 1.25;
+            color: #ffffff;
+        }
         .title-group p {
             margin: 0;
             font-size: 0.92rem;
@@ -128,183 +107,17 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .icon-button {
-            width: 42px;
-            height: 42px;
-            padding: 0;
-            border: none;
-            border-radius: 50%;
-            background: #f5f5f5;
-            color: var(--primary);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-        .icon-button:hover { background: var(--primary-dark); color: #ffffff; }
 
-        /* ---------- Layout ---------- */
-        .page-content {
+        .backdrop {
             flex: 1;
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px;
-        }
-
-        /* ---------- Hero ---------- */
-        .hero {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-            padding: 2.25rem 2rem;
-            margin-bottom: 1.75rem;
-            border-radius: var(--radius);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-        }
-        .hero h1 { margin: 0 0 0.6rem; color: #ffffff; font-size: 2.5rem; }
-        .hero p { margin: 0; max-width: 62ch; color: rgba(255, 255, 255, 0.9); font-size: 1.15rem; line-height: 1.7; }
-        .hero-badge {
-            display: inline-block;
-            padding: 0.3rem 0.9rem;
-            margin-bottom: 0.9rem;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.18);
-            color: #ffffff;
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-        .hero-icon { flex: 0 0 auto; color: rgba(255, 255, 255, 0.16); }
-        .hero-icon .icon { width: 130px; height: 130px; }
-
-        /* ---------- Role cards (stat-card styling) ---------- */
-        .card-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 1.5rem;
-        }
-        .role-card {
-            display: flex;
-            flex-direction: column;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.6rem 1.75rem;
-            box-shadow: var(--shadow);
-            color: var(--text);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .role-card:hover {
-            color: var(--text);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-        .role-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        .stat-icon {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: var(--tint);
             color: var(--primary);
+            opacity: 0.08;
         }
-        .role-label {
-            display: block;
-            margin-bottom: 0.35rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-        .role-card h2 { margin: 0 0 0.6rem; font-size: 2rem; }
-        .role-card .desc { flex: 1; margin: 0 0 1.5rem; color: var(--text-muted); font-size: 1.15rem; line-height: 1.7; }
+        .backdrop .icon { width: min(60vh, 420px); height: min(60vh, 420px); }
 
-        /* Status pill */
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 0.25rem 0.75rem;
-            border-radius: 999px;
-            background: var(--tint);
-            color: var(--text-muted);
-            font-size: 0.92rem;
-            font-weight: 600;
-        }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #999; }
-        .status[data-state="on"] { background: var(--success-tint); color: var(--success); }
-        .status[data-state="on"] .dot { background: var(--success); }
-        .status[data-state="off"] { background: var(--danger-tint); color: var(--danger); }
-        .status[data-state="off"] .dot { background: var(--danger); }
-
-        /* Button */
-        .btn {
-            align-self: flex-start;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.4rem;
-            border: 1px solid transparent;
-            border-radius: var(--radius-sm);
-            background: var(--primary);
-            color: #ffffff;
-            font-family: inherit;
-            font-size: 1.05rem;
-            font-weight: 600;
-            line-height: 1.2;
-            white-space: nowrap;
-            transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-        }
-        .btn .icon { width: 18px; height: 18px; }
-        .role-card:hover .btn {
-            background: var(--primary-dark);
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
-        }
-
-        /* ---------- Not-running notice (panel) ---------- */
-        #notice {
-            display: none;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-left: 4px solid var(--danger);
-            border-radius: var(--radius);
-            padding: 1.1rem 1.5rem;
-            font-size: 1.05rem;
-            box-shadow: var(--shadow);
-        }
-        #notice code {
-            display: block;
-            margin-top: 0.6rem;
-            padding: 0.6rem 0.9rem;
-            border-radius: var(--radius-sm);
-            background: var(--surface-tint);
-            border: 1px solid var(--border);
-            font-family: ui-monospace, Consolas, monospace;
-            font-size: 1rem;
-            color: var(--primary);
-            word-break: break-all;
-        }
-
-        /* ---------- Footer ---------- */
         .footer {
             padding: 1.25rem;
             border-top: 1px solid var(--border);
@@ -314,60 +127,181 @@
             text-align: center;
         }
 
-        :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; border-radius: 3px; }
-        .navbar :focus-visible, .hero :focus-visible { outline-color: #ffffff; }
+        /* ---------- The popup ---------- */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(22, 10, 42, 0.58);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            overflow-y: auto;
+        }
 
-        @media (max-width: 720px) {
+        .dialog {
+            position: relative;
+            width: min(440px, 100%);
+            margin: auto;
+            padding: 2.5rem 2rem 2.25rem;
+            border-radius: var(--radius);
+            background: var(--primary);
+            color: #ffffff;
+            text-align: center;
+            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+            animation: pop 0.35s cubic-bezier(.2, .9, .3, 1.2) both;
+        }
+        @keyframes pop {
+            from { opacity: 0; transform: translateY(18px) scale(0.95); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        .dialog-icon {
+            width: 112px;
+            height: 112px;
+            margin: 0 auto 0.5rem;
+            color: #ffffff;
+        }
+        .dialog-icon svg { width: 100%; height: 100%; display: block; }
+        .dialog-icon .accent { color: var(--accent); }
+
+        .dialog h2 {
+            margin: 0 0 1.1rem;
+            font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
+            font-weight: 800;
+            font-size: clamp(2.6rem, 11vw, 3.4rem);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+        }
+        .dialog p.lead {
+            margin: 0 auto 1.75rem;
+            max-width: 30ch;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.92);
+        }
+
+        /* Theme toggle (kept in the popup corner so it stays reachable) */
+        .theme-toggle {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 42px;
+            height: 42px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .theme-toggle:hover { background: #ffffff; color: var(--primary); }
+
+        /* Role buttons */
+        .choices {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .choice {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+        }
+        .choice-btn {
+            display: block;
+            padding: 0.95rem 0.75rem;
+            border-radius: var(--radius-sm);
+            background: var(--accent);
+            color: #2A1B00;
+            font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.2;
+            text-decoration: none;
+            transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .choice-btn:hover {
+            background: #ffffff;
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #c9bfdc; }
+        .status[data-state="on"] .dot  { background: #7BE3B0; }
+        .status[data-state="off"] .dot { background: #FFB4A6; }
+
+        /* Not-running notice, inside the popup */
+        #notice {
+            display: none;
+            margin-top: 1.4rem;
+            padding: 0.9rem 1rem;
+            border-radius: var(--radius-sm);
+            background: rgba(0, 0, 0, 0.22);
+            text-align: left;
+            font-size: 0.98rem;
+            line-height: 1.5;
+        }
+        #notice code {
+            display: block;
+            margin-top: 0.55rem;
+            padding: 0.55rem 0.75rem;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            font-family: ui-monospace, Consolas, monospace;
+            font-size: 0.92rem;
+            color: #ffe08a;
+            overflow-wrap: break-word;
+        }
+
+        .dialog:focus { outline: none; }
+        :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; border-radius: 3px; }
+        .dialog :focus-visible, .navbar :focus-visible { outline-color: #ffffff; }
+
+        @media (max-width: 420px) {
             .navbar { padding: 0 16px; }
-            .page-content { padding: 24px 16px; }
-            .hero { padding: 1.75rem 1.25rem; }
-            .hero-icon { display: none; }
             .title-group h1 { font-size: 1.15rem; }
-            .hero h1 { font-size: 2rem; }
-            .role-card h2 { font-size: 1.7rem; }
+            .dialog { padding: 2.25rem 1.25rem 1.75rem; }
+            .choices { flex-direction: column; }
+            .choice { width: 100%; }
         }
         @media (prefers-reduced-motion: reduce) {
-            * { transition: none !important; scroll-behavior: auto !important; }
-            .role-card:hover { transform: none; }
+            * { transition: none !important; }
+            .dialog { animation: none; }
+            .choice-btn:hover { transform: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Shared inline icon sprite (stroke = currentColor, Feather style, same as the Lecturer DSS) -->
+    <!-- Shared inline icon sprite (stroke = currentColor, Feather style, same as the apps) -->
     <svg class="svg-sprite" aria-hidden="true" focusable="false">
         <symbol id="i-grad" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 9.5 12 5 2 9.5l10 4.5 10-4.5z"/>
                 <path d="M6 11.6V17c0 1.6 2.7 2.8 6 2.8s6-1.2 6-2.8v-5.4"/>
                 <line x1="22" y1="9.5" x2="22" y2="15"/>
-            </g>
-        </symbol>
-        <symbol id="i-chart" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="20" x2="18" y2="10"/>
-                <line x1="12" y1="20" x2="12" y2="4"/>
-                <line x1="6" y1="20" x2="6" y2="14"/>
-            </g>
-        </symbol>
-        <symbol id="i-users" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </g>
-        </symbol>
-        <symbol id="i-trending" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                <polyline points="17 6 23 6 23 12"/>
-            </g>
-        </symbol>
-        <symbol id="i-arrow-right" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
             </g>
         </symbol>
         <symbol id="i-moon" viewBox="0 0 24 24">
@@ -390,70 +324,60 @@
         </symbol>
     </svg>
 
+    <!-- Page behind the popup -->
     <nav class="navbar" aria-label="Main">
-        <div class="navbar-left">
-            <div class="logo" aria-hidden="true">
-                <svg class="icon"><use href="#i-grad"></use></svg>
-            </div>
-            <div class="title-group">
-                <h1>NWU Academic Performance Monitoring</h1>
-                <p>Lecturer DSS &middot; Student Performance Assistant</p>
-            </div>
-        </div>
-        <div class="navbar-right">
-            <button type="button" class="icon-button" id="darkModeToggle"
-                    aria-label="Toggle dark mode" aria-pressed="false" title="Toggle dark mode">
-                <svg class="icon" id="themeIconMoon" aria-hidden="true"><use href="#i-moon"></use></svg>
-                <svg class="icon" id="themeIconSun" aria-hidden="true" hidden><use href="#i-sun"></use></svg>
-            </button>
+        <div class="logo" aria-hidden="true"><svg class="icon"><use href="#i-grad"></use></svg></div>
+        <div class="title-group">
+            <h1>NWU Academic Performance Monitoring</h1>
+            <p>Lecturer DSS &middot; Student Performance Assistant</p>
         </div>
     </nav>
 
-    <main class="page-content">
-        <section class="hero">
-            <div class="hero-content">
-                <span class="hero-badge">APFIS</span>
-                <h1>Academic performance monitoring</h1>
-                <p>
-                    One entry point for two systems. Choose your role to monitor your class
-                    and plan assessments, or to track your own marks and see what you still need.
-                </p>
-            </div>
-            <div class="hero-icon" aria-hidden="true">
-                <svg class="icon"><use href="#i-chart"></use></svg>
-            </div>
-        </section>
-
-        <div class="card-row">
-            <a class="role-card" id="lecturer" href="#">
-                <div class="role-top">
-                    <span class="stat-icon" aria-hidden="true"><svg class="icon"><use href="#i-users"></use></svg></span>
-                    <span class="status" data-state="checking"><span class="dot"></span><span class="label">Checking…</span></span>
-                </div>
-                <span class="role-label">Decision Support System</span>
-                <h2>I'm a lecturer</h2>
-                <p class="desc">Monitor your class average, identify at-risk students and plan assessment participation.</p>
-                <span class="btn">Open the lecturer system <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></span>
-            </a>
-
-            <a class="role-card" id="student" href="#">
-                <div class="role-top">
-                    <span class="stat-icon" aria-hidden="true"><svg class="icon"><use href="#i-trending"></use></svg></span>
-                    <span class="status" data-state="checking"><span class="dot"></span><span class="label">Checking…</span></span>
-                </div>
-                <span class="role-label">Student Performance Assistant</span>
-                <h2>I'm a student</h2>
-                <p class="desc">Record your marks, see your academic profile and find out what you need in your remaining assessments.</p>
-                <span class="btn">Open the student system <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></span>
-            </a>
-        </div>
-
-        <div id="notice" role="alert"></div>
-    </main>
+    <div class="backdrop" aria-hidden="true">
+        <svg class="icon"><use href="#i-grad"></use></svg>
+    </div>
 
     <footer class="footer">
         Research prototype &mdash; G. O. G. Sebaetse, T. Ndlakuse &middot; NWU Potchefstroom Campus
     </footer>
+
+    <!-- The gateway popup -->
+    <div class="overlay">
+        <main class="dialog" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" aria-describedby="dialogDesc">
+
+            <button type="button" class="theme-toggle" id="darkModeToggle"
+                    aria-label="Toggle dark mode" aria-pressed="false" title="Toggle dark mode">
+                <svg class="icon" id="themeIconMoon" aria-hidden="true"><use href="#i-moon"></use></svg>
+                <svg class="icon" id="themeIconSun" aria-hidden="true" hidden><use href="#i-sun"></use></svg>
+            </button>
+
+            <div class="dialog-icon" aria-hidden="true">
+                <!-- Graduation cap, drawn larger with a thinner line, like the cookie in the reference -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 9.5 12 5 2 9.5l10 4.5 10-4.5z"/>
+                    <path d="M6 11.6V17c0 1.6 2.7 2.8 6 2.8s6-1.2 6-2.8v-5.4"/>
+                    <line x1="22" y1="9.5" x2="22" y2="15"/>
+                    <circle class="accent" cx="22" cy="16.2" r="0.9" fill="currentColor" stroke="none"/>
+                </svg>
+            </div>
+
+            <h2 id="dialogTitle">who are you?</h2>
+            <p class="lead" id="dialogDesc">Pick your role and we'll open the right system for you.</p>
+
+            <div class="choices">
+                <div class="choice">
+                    <a class="choice-btn" id="lecturer" href="#" title="Decision Support System">I'm a lecturer</a>
+                    <span class="status" id="status-lecturer" data-state="checking" aria-live="polite"><span class="dot"></span><span class="label">Checking…</span></span>
+                </div>
+                <div class="choice">
+                    <a class="choice-btn" id="student" href="#" title="Student Performance Assistant">I'm a student</a>
+                    <span class="status" id="status-student" data-state="checking" aria-live="polite"><span class="dot"></span><span class="label">Checking…</span></span>
+                </div>
+            </div>
+
+            <div id="notice" role="alert"></div>
+        </main>
+    </div>
 
 <script>
     // Change these if you run the systems on different ports or host them online.
@@ -502,7 +426,7 @@
 
     async function refresh(key) {
         const el = document.getElementById(key);
-        const status = el.querySelector(".status");
+        const status = document.getElementById("status-" + key);
         const up = await isUp(SYSTEMS[key].url);
         status.dataset.state = up ? "on" : "off";
         status.querySelector(".label").textContent = up ? "Running" : "Not running";
@@ -526,6 +450,8 @@
             notice.appendChild(code);
         });
     });
+
+    document.querySelector(".dialog").focus({ preventScroll: true });
 </script>
 </body>
 </html>
