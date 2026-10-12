@@ -8,10 +8,13 @@ from io import BytesIO, StringIO
 import pandas as pd
 from flask import Blueprint, flash, redirect, render_template, request, send_file, url_for
 
-from backend.algorithms.lp_bounds import compute_pmark_bounds, is_at_risk
+from backend.algorithms.lp_bounds import is_at_risk
 from backend.data.loader import PIIValidationError
 from backend.data.store import DataStore, data_store
 from backend.models.student import Module
+from backend.services.participation import analyse
+from backend.services.rounding import fmt2
+from config import Config
 
 module_bp = Blueprint("modules", __name__)
 
@@ -41,19 +44,42 @@ def parse_weight_percent(raw: str) -> float:
 def list_modules():
     modules = data_store.module_list()
     active = data_store.active_module
-    return render_template("modules.html", modules=modules, active=active)
+    return render_template(
+        "modules.html",
+        modules=modules,
+        active=active,
+        default_pass_threshold=f"{Config.DEFAULT_PASS_THRESHOLD:g}",
+    )
+
+
+def parse_threshold_percent(raw: str) -> float:
+    """Parse a pass threshold typed as a percentage (0-100)."""
+    try:
+        percent = float(raw)
+    except (TypeError, ValueError):
+        raise ValueError("Pass threshold must be a number (percentage).") from None
+    if not 0 <= percent <= 100:
+        raise ValueError("Pass threshold must be between 0% and 100%.")
+    return percent
 
 
 @module_bp.route("/modules/create", methods=["POST"])
 def create_module():
     code = request.form.get("module_code", "").strip()
     name = request.form.get("module_name", "").strip()
+    raw_threshold = (request.form.get("module_threshold") or "").strip()
     try:
-        data_store.create_module(code, name)
+        threshold = parse_threshold_percent(raw_threshold) if raw_threshold else None
+        data_store.create_module(code, name, pass_threshold=threshold)
     except ValueError as e:
         flash(str(e), "error")
         return redirect(url_for("modules.list_modules"))
-    flash(f"Module '{data_store.active_module.label}' created.", "success")
+    module = data_store.active_module
+    flash(
+        f"Module '{module.label}' created with a {module.config.pass_threshold:g}% "
+        "pass threshold.",
+        "success",
+    )
     return redirect(url_for("home.home"))
 
 
@@ -173,19 +199,27 @@ def summary_export(code: str):
     threshold = module.config.pass_threshold
     records = []
     for student in module.students:
-        min_pm, max_pm = compute_pmark_bounds(student.assessments)
+        participation = analyse(student.assessments)
         records.append(
             {
                 "student_code": student.student_code,
-                "current_pmark": round(student.p_mark_current, 2),
-                "min_pmark": min_pm,
-                "max_pmark": max_pm,
-                "at_risk": is_at_risk(max_pm, threshold),
+                "participation_so_far": fmt2(participation.accrued),
+                "current_standing": "" if participation.standing is None else fmt2(participation.standing),
+                "min_pmark": fmt2(participation.min_final),
+                "max_pmark": fmt2(participation.max_final),
+                "at_risk": is_at_risk(participation.max_final, threshold),
             }
         )
     df = pd.DataFrame(
         records,
-        columns=["student_code", "current_pmark", "min_pmark", "max_pmark", "at_risk"],
+        columns=[
+            "student_code",
+            "participation_so_far",
+            "current_standing",
+            "min_pmark",
+            "max_pmark",
+            "at_risk",
+        ],
     )
     buffer = StringIO()
     df.to_csv(buffer, index=False)
@@ -201,25 +235,43 @@ def summary_export(code: str):
 # --------------------------------------------------------------------------- #
 # Assessment plan for the active module
 # --------------------------------------------------------------------------- #
+def parse_item_count(raw: str, label: str) -> int:
+    """Parse a whole-number item count (M or N) typed as a positive integer."""
+    try:
+        value = int(str(raw).strip())
+    except (TypeError, ValueError):
+        raise ValueError(f"{label} must be a whole number.") from None
+    if value < 1:
+        raise ValueError(f"{label} must be at least 1.")
+    return value
+
+
 @module_bp.route("/plan")
 def plan():
     module, response = active_module_or_redirect()
     if response is not None:
         return response
 
-    completed_counts = {}
+    marked_counts = {}
     for plan_entry in module.assessments:
-        completed_counts[plan_entry.name] = sum(
+        items = {
+            spec["name"]
+            for spec in module.plan_item_specs()
+            if spec["group"] == plan_entry.name
+        }
+        marked_counts[plan_entry.name] = sum(
             1
             for s in module.students
-            if (a := module.student_assessment(s, plan_entry.name)) is not None
-            and a.completed
+            if any(
+                (a := module.student_assessment(s, item_name)) is not None and a.completed
+                for item_name in items
+            )
         )
     return render_template(
         "plan.html",
         module=module,
-        completed_counts=completed_counts,
-        total_weights=round(sum(a.weight for a in module.assessments) * 100, 1),
+        marked_counts=marked_counts,
+        total_weights=sum(a.weight for a in module.assessments) * 100,
     )
 
 
@@ -230,15 +282,31 @@ def add_assessment():
         return response
 
     name = request.form.get("assessment_name", "").strip()
+    raw_items = request.form.get("items", "1")
+    raw_count_best = request.form.get("count_best", "")
     try:
         weight = parse_weight_percent(request.form.get("weight", ""))
         if "/" in name:
             raise ValueError("Assessment names cannot contain a '/'.")
-        data_store.add_assessment(module, name, weight)
+        items = parse_item_count(raw_items, "Number of items")
+        count_best = (
+            items
+            if not str(raw_count_best).strip()
+            else parse_item_count(raw_count_best, "Count best")
+        )
+        data_store.add_assessment(module, name, weight, items=items, count_best=count_best)
     except ValueError as e:
         flash(str(e), "error")
     else:
-        flash(f"Assessment '{name}' added to the plan.", "success")
+        drop_note = (
+            ""
+            if items == 1
+            else (
+                f" Only the best {count_best} of {items} count towards the "
+                "participation mark."
+            )
+        )
+        flash(f"Assessment '{name}' added to the plan.{drop_note}", "success")
     return redirect(url_for("modules.plan"))
 
 
@@ -248,13 +316,36 @@ def update_assessment(name: str):
     if response is not None:
         return response
 
+    plan_entry = module.assessment(name)
+    if plan_entry is None:
+        flash(f"No assessment named '{name}'.", "error")
+        return redirect(url_for("modules.plan"))
+
+    raw_items = request.form.get("items", "")
+    raw_count_best = request.form.get("count_best", "")
     try:
         weight = parse_weight_percent(request.form.get("weight", ""))
-        data_store.update_assessment(module, name, weight)
+        items = (
+            plan_entry.items
+            if not str(raw_items).strip()
+            else parse_item_count(raw_items, "Number of items")
+        )
+        count_best = (
+            plan_entry.count_best
+            if not str(raw_count_best).strip()
+            else parse_item_count(raw_count_best, "Count best")
+        )
+        data_store.update_assessment(
+            module, name, weight, items=items, count_best=count_best
+        )
     except ValueError as e:
         flash(str(e), "error")
     else:
-        flash(f"Weight for '{name}' updated.", "success")
+        flash(
+            f"'{name}' updated: weight {weight * 100:g}%, best {count_best} of "
+            f"{items} count.",
+            "success",
+        )
     return redirect(url_for("modules.plan"))
 
 

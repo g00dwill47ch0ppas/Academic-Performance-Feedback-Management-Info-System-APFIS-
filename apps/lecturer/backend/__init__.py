@@ -21,11 +21,20 @@ def create_app():
     from backend.routes.students import students_bp
     from backend.routes.cohort import cohort_bp
     from backend.routes.modules import module_bp
+    from backend.routes.tutorial import tutorial_bp
 
     app.register_blueprint(home_bp)
     app.register_blueprint(students_bp)
     app.register_blueprint(cohort_bp)
     app.register_blueprint(module_bp)
+    app.register_blueprint(tutorial_bp)
+
+    # Display rounding happens in exactly one place: templates use ``|r2`` and
+    # files/JSON use the same helper through ``fmt2``. Calculations keep full
+    # precision so the algorithms cannot drift (see backend/services/rounding.py).
+    from backend.services.rounding import fmt2
+
+    app.jinja_env.filters["r2"] = fmt2
 
     # Seed the bundled simulated dataset as a demo module at startup (FR1) so
     # the app is immediately usable without requiring an upload first.
