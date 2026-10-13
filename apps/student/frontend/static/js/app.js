@@ -269,6 +269,40 @@ if (closeAppButton) {
 
 }
 
+    // --------------------------------------
+// Sign Out (back to the gateway landing page)
+// --------------------------------------
+
+const signOutButton =
+    document.getElementById("signOutButton");
+
+if (signOutButton) {
+
+    signOutButton.addEventListener(
+        "click",
+        () => {
+
+            const confirmed =
+                window.confirm(
+                    "Are you sure you want to sign out and return to the landing page?"
+                );
+
+            if (!confirmed) {
+                return;
+            }
+
+            // The gateway ("who are you?" role chooser) serves the landing
+            // page on port 5000 — see gateway/gateway.py and the SYSTEMS
+            // map in gateway/index.html.
+            window.location.assign(
+                "http://localhost:5000/"
+            );
+
+        }
+    );
+
+}
+
     console.log(
         "Header tools initialized successfully."
     );

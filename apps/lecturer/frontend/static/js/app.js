@@ -209,3 +209,43 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.key === "Escape") closeSidebar(true);
     });
 });
+
+// ---------------------------------------------------------------------------
+// Sign out: the navbar button takes the user back to the gateway landing page
+// (the "who are you?" role chooser served by gateway/gateway.py on port 5000).
+//
+// It also forgets the guided-tutorial state so that choosing "I'm a lecturer"
+// again — however many times — looks exactly like a first visit and pops the
+// first-run welcome modal once more.
+// ---------------------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.getElementById("signOutButton");
+    if (!toggle) return;
+
+    // Keep in sync with gateway/index.html (SYSTEMS entries point back to the
+    // apps; the gateway itself serves the landing page on this port).
+    const GATEWAY_URL = "http://localhost:5000/";
+
+    toggle.addEventListener("click", () => {
+        // A native confirm, matching the student app's Close Application.
+        // It must run first: cancelling has to leave the tutorial state
+        // completely untouched.
+        const confirmed = window.confirm(
+            "Sign out and return to the landing page? The welcome message will appear again next time."
+        );
+        if (!confirmed) return;
+
+        // Same storage keys as tutorial.js (KEYS.seen / KEYS.active / …):
+        // dropping the "seen" flag re-arms the first-run welcome modal, and
+        // clearing any in-flight tour state stops a half-finished tour from
+        // resuming on the next visit.
+        try {
+            localStorage.removeItem("dss_tutorial_seen");
+            sessionStorage.removeItem("dss_tutorial_active");
+            sessionStorage.removeItem("dss_tutorial_step");
+            sessionStorage.removeItem("dss_tutorial_section");
+        } catch (e) { /* storage unavailable — still sign out */ }
+
+        window.location.assign(GATEWAY_URL);
+    });
+});

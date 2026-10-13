@@ -129,6 +129,13 @@
                 <line x1="3" y1="18" x2="21" y2="18"/>
             </g>
         </symbol>
+        <symbol id="i-logout" viewBox="0 0 24 24">
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+            </g>
+        </symbol>
         <symbol id="i-close" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"/>
@@ -258,6 +265,10 @@
                     aria-label="Toggle dark mode" aria-pressed="false" title="Toggle dark mode">
                 <svg class="icon" id="themeIconMoon" aria-hidden="true"><use href="#i-moon"></use></svg>
                 <svg class="icon" id="themeIconSun" aria-hidden="true" hidden><use href="#i-sun"></use></svg>
+            </button>
+            <button type="button" class="icon-button" id="signOutButton"
+                    aria-label="Sign out and return to the landing page" title="Sign out">
+                <svg class="icon" aria-hidden="true"><use href="#i-logout"></use></svg>
             </button>
             <button type="button" class="icon-button" id="navToggle"
                     aria-label="Open navigation" aria-expanded="false" aria-controls="navSidebar"

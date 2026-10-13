@@ -171,3 +171,21 @@ def test_create_module_without_a_threshold_uses_the_default():
     finally:
         data_store.delete_module("THRESH3")
         data_store.activate("CS101")
+
+
+def test_sign_out_returns_to_the_gateway_and_rearms_the_welcome():
+    """Signing out must re-arm the first-run welcome, every single time.
+
+    The navbar sign-out button clears the tutorial's "seen" flag before
+    leaving for the gateway, so choosing "I'm a lecturer" again pops the
+    welcome modal just like a first visit. It asks for confirmation first,
+    so an accidental click changes nothing.
+    """
+    body = _client().get("/").data.decode("utf-8")
+    assert 'id="signOutButton"' in body  # the button exists on every page
+
+    script = Path("frontend/static/js/app.js").read_text(encoding="utf-8")
+    assert "window.confirm(" in script  # the accidental-click guard
+    assert 'localStorage.removeItem("dss_tutorial_seen")' in script
+    assert 'sessionStorage.removeItem("dss_tutorial_active")' in script
+    assert "localhost:5000" in script  # the gateway landing page
