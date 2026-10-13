@@ -222,9 +222,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggle = document.getElementById("signOutButton");
     if (!toggle) return;
 
-    // Keep in sync with gateway/index.html (SYSTEMS entries point back to the
-    // apps; the gateway itself serves the landing page on this port).
-    const GATEWAY_URL = "http://localhost:5000/";
+    // Hosted gateway (the "who are you?" role chooser). Swap this for
+    // http://localhost:5000/ to sign out to a locally running gateway.py.
+    const GATEWAY_URL = "https://apfis-gateway.onrender.com/";
 
     toggle.addEventListener("click", () => {
         // A native confirm, matching the student app's Close Application.

@@ -188,4 +188,4 @@ def test_sign_out_returns_to_the_gateway_and_rearms_the_welcome():
     assert "window.confirm(" in script  # the accidental-click guard
     assert 'localStorage.removeItem("dss_tutorial_seen")' in script
     assert 'sessionStorage.removeItem("dss_tutorial_active")' in script
-    assert "localhost:5000" in script  # the gateway landing page
+    assert "https://apfis-gateway.onrender.com/" in script  # the gateway landing page

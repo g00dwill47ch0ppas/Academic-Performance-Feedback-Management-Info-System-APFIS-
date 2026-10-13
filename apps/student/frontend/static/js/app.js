@@ -291,11 +291,10 @@ if (signOutButton) {
                 return;
             }
 
-            // The gateway ("who are you?" role chooser) serves the landing
-            // page on port 5000 — see gateway/gateway.py and the SYSTEMS
-            // map in gateway/index.html.
+            // Hosted gateway (the "who are you?" role chooser). Swap this
+            // for http://localhost:5000/ to sign out to a local gateway.py.
             window.location.assign(
-                "http://localhost:5000/"
+                "https://apfis-gateway.onrender.com/"
             );
 
         }
