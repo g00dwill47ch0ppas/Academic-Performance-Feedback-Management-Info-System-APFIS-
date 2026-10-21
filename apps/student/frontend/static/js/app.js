@@ -354,6 +354,26 @@ const assessmentWeight = document.getElementById("assessmentWeight");
 
 let assessments = [];
 
+function updateWeightVerification() {
+
+    const verification = document.getElementById("weightVerification");
+    if (!verification) return;
+
+    const enteredWeight = assessmentWeight ? Number(assessmentWeight.value || 0) : 0;
+    const total = assessments.reduce((sum, item) => sum + Number(item.weight || 0), 0) + enteredWeight;
+    const valid = Math.abs(total - 100) < 0.000001;
+    const adjustment = Number(Math.abs(100 - total).toFixed(2));
+    verification.textContent = total > 0
+        ? `Total including the weight being entered: ${Number(total.toFixed(2))}%. ${valid ? "Weighting is correct." : total < 100 ? `${adjustment}% more is needed to reach 100%.` : `Reduce the total by ${adjustment}% to reach 100%.`}`
+        : "Add assessment weightings to check that they total 100%.";
+    verification.className = `mt-3 ${valid ? "text-success" : "text-danger"}`;
+
+}
+
+if (assessmentWeight) {
+    assessmentWeight.addEventListener("input", updateWeightVerification);
+}
+
 if (addButton) {
 
     addButton.addEventListener("click", () => {
@@ -412,6 +432,7 @@ if (addButton) {
         assessmentCategory.selectedIndex = 0;
         assessmentQuantity.value = "";
         assessmentWeight.value = "";
+        updateWeightVerification();
         quantityContainer.style.display = "none";
 
     });
@@ -486,6 +507,8 @@ function attachButtonEvents() {
             assessmentCategory.appendChild(option);
 
             assessments.splice(index, 1);
+
+            updateWeightVerification();
 
             if (assessments.length === 0) {
 
@@ -576,7 +599,7 @@ function validatePhaseOne() {
             0
         );
 
-    if (totalWeight !== 100) {
+    if (Math.abs(totalWeight - 100) > 0.000001) {
 
         alert(
             `Total weighting is currently ${totalWeight}%.\n\nThe assessment plan must equal exactly 100%.`
@@ -1781,9 +1804,9 @@ function generateImprovementOptions() {
     const improvementScenarios =
         JSON.parse(
             localStorage.getItem(
-                "improvementScenarios"
-            )
-        );
+                "uniqueImprovementScenarios"
+            ) || localStorage.getItem("improvementScenarios")
+        ) || [];
 
 
     // ------------------------------------------
@@ -1887,6 +1910,19 @@ function generateImprovementOptions() {
 
         const requiredScores = [];
 
+        const participatedWeight = scenario.participation
+            .filter(item => item.participated)
+            .reduce((sum, item) => sum + item.assessments.reduce(
+                (assessmentSum, assessment) => assessmentSum + Number(assessment.weightPerAssessment || 0), 0
+            ), 0);
+
+        // Participation is already the weighted contribution of completed marks.
+        // To add delta points, the selected remaining assessments must contribute
+        // delta in total: mark / 100 * selected weight = delta.
+        const requiredMarkForScenario = participatedWeight > 0
+            ? (delta * 100) / participatedWeight
+            : null;
+
         factorPerformance.forEach(factor => {
 
             const category =
@@ -1921,52 +1957,10 @@ function generateImprovementOptions() {
 
             }
 
-            const totalAssessments =
-                Number(
-                    factor.totalAssessments
-                );
-
-            const remainingAssessments =
-                Number(
-                    factor.remainingAssessments
-                );
-
-            const currentAverage =
-                Number(
-                    factor.currentAverage
-                );
-
-            // Number of assessments participated in
-            const participatedCount =
-                scenario.participation
-                    .filter(item => item.participated)
-                    .reduce(
-                        (count, item) => {
-
-                            return count +
-                                item.assessments.filter(
-                                    assessment =>
-                                        assessment.category === category
-                                ).length;
-
-                        },
-                        0
-                    );
-
-            const requiredMark =
-                (
-                    (delta * totalAssessments) +
-                    (
-                        remainingAssessments *
-                        currentAverage
-                    )
-                ) /
-                participatedCount;
-
             requiredScores.push(
-                Number(
-                    requiredMark.toFixed(2)
-                )
+                requiredMarkForScenario === null
+                    ? null
+                    : Number(requiredMarkForScenario.toFixed(2))
             );
 
         });
