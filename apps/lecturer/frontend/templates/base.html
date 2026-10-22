@@ -258,6 +258,7 @@
                         Academic Performance Monitoring System
                     {% endif %}
                 </p>
+                
             </div>
         </div>
         <div class="navbar-right">
@@ -277,6 +278,7 @@
             </button>
         </div>
     </nav>
+
 
     <div class="settings-overlay" id="navOverlay"></div>
 
@@ -366,9 +368,11 @@
                 <svg class="icon nav-check" aria-hidden="true"><use href="#i-check"></use></svg>
                 {% endif %}
             </a>
+            
             {% endfor %}
             {% endif %}
         </div>
+        
 
         <div class="settings-footer">
             <a class="btn{{ ' btn-secondary' if request.endpoint in ['modules.list_modules', 'modules.create_module', 'modules.import_module', 'modules.edit_module'] else '' }}"

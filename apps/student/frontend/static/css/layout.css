@@ -167,6 +167,10 @@ main{
 body.dark-mode {
     background-color: #121212;
     color: #f1f1f1;
+    color-scheme: dark;
+    --bs-body-bg: #121212;
+    --bs-body-color: #f1f1f1;
+    --bs-border-color: #444444;
 }
 
 
@@ -201,6 +205,11 @@ body.dark-mode .card-body {
 
 body.dark-mode .table {
     color: #f1f1f1;
+    --bs-table-bg: #1e1e1e;
+    --bs-table-color: #f1f1f1;
+    --bs-table-border-color: #444444;
+    --bs-table-hover-bg: #2b2b2b;
+    --bs-table-hover-color: #ffffff;
 }
 
 body.dark-mode .table-light {
@@ -252,6 +261,10 @@ body.dark-mode .navbar {
 
 
 /* Footer */
+
+.phase4-navigation .btn-primary {
+    margin-top: 0;
+}
 
 body.dark-mode footer {
     background-color: #171717;
