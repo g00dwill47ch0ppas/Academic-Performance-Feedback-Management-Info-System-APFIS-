@@ -680,6 +680,24 @@ function showConfirmationModal() {
 
             };
 
+            // A new-student workflow must never inherit marks or calculated
+            // results left behind by a previous student or CSV import.
+            [
+                "returningAssessmentMarks",
+                "academicProfile",
+                "remainingAssessments",
+                "remainingAssessmentDetails",
+                "factorPerformance",
+                "remainingAssessmentSessions",
+                "participationScenarioMatrix",
+                "improvementScenarios",
+                "evaluatedImprovementScenarios",
+                "uniqueImprovementScenarios",
+                "feasibleScenarios"
+            ].forEach(key => localStorage.removeItem(key));
+
+            localStorage.setItem("studentMode", "new");
+
             localStorage.setItem(
                 "studentModel",
                 JSON.stringify(studentModel)
@@ -875,10 +893,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Load marks from returning student CSV
     // --------------------------------------
 
-    const storedReturningMarks =
-        localStorage.getItem(
-            "returningAssessmentMarks"
-        );
+    const storedReturningMarks = localStorage.getItem("studentMode") === "returning"
+        ? localStorage.getItem("returningAssessmentMarks")
+        : null;
 
 
     if (storedReturningMarks) {
@@ -944,7 +961,9 @@ function generateAcademicProfile() {
     const markInputs =
         document.querySelectorAll(".mark-input");
 
-    let totalParticipation = 0;
+    let weightedMarkTotal = 0;
+
+    let completedWeight = 0;
 
     let completed = 0;
 
@@ -985,8 +1004,10 @@ function generateAcademicProfile() {
 
                 completedCount++;
 
-                totalParticipation +=
-                    (Number(value) / 100) *
+                weightedMarkTotal +=
+                    Number(value) * weightPerAssessment;
+
+                completedWeight +=
                     weightPerAssessment;
 
             }
@@ -1055,21 +1076,26 @@ function generateAcademicProfile() {
         });
 
     });
+
+    const currentParticipation = completedWeight > 0
+        ? weightedMarkTotal / completedWeight
+        : 0;
+
     let standing = "";
 
-    if (totalParticipation >= 75) {
+    if (currentParticipation >= 75) {
 
         standing = "Excellent";
 
     }
 
-    else if (totalParticipation >= 60) {
+    else if (currentParticipation >= 60) {
 
         standing = "Good";
 
     }
 
-    else if (totalParticipation >= 50) {
+    else if (currentParticipation >= 50) {
 
         standing = "Satisfactory";
 
@@ -1132,7 +1158,11 @@ function generateAcademicProfile() {
 
     const academicProfile = {
 
-        participationMark: totalParticipation,
+        participationMark: currentParticipation,
+
+        weightedMarkTotal: weightedMarkTotal,
+
+        completedWeight: completedWeight,
 
         academicStanding: standing,
 
@@ -1243,8 +1273,8 @@ function generateAcademicProfile() {
             <hr>
 
             <p>
-                <strong>Current Participation Mark:</strong>
-                ${totalParticipation.toFixed(2)}%
+                <strong>Current Participation Mark (weighted average):</strong>
+                ${currentParticipation.toFixed(2)}%
             </p>
 
             <p>
@@ -1447,11 +1477,11 @@ function generateAcademicProfile() {
 
         });
 
-        const improvement =
-            scenarioWeight;
+        const targetParticipation = completedWeight + scenarioWeight > 0
+            ? (weightedMarkTotal + 100 * scenarioWeight) / (completedWeight + scenarioWeight)
+            : 0;
 
-        const targetParticipation =
-            totalParticipation + improvement;
+        const improvement = targetParticipation - currentParticipation;
 
         evaluatedScenarios.push({
 
@@ -1569,6 +1599,53 @@ function generateAcademicProfile() {
 // Phase 3 - Load Academic Profile
 // ==========================================
 
+function normalizeAcademicProfile(profile, factors) {
+    const reconstructed = factors.reduce((result, factor) => {
+        const count = Number(factor.completedAssessments || 0);
+        const weightPerAssessment = Number(factor.weightPerAssessment || 0);
+        result.completedWeight += count * weightPerAssessment;
+        result.weightedMarkTotal += count * Number(factor.currentAverage || 0) * weightPerAssessment;
+        return result;
+    }, { completedWeight: 0, weightedMarkTotal: 0 });
+
+    const completedWeight = profile.completedWeight !== undefined && profile.completedWeight !== null
+        ? Number(profile.completedWeight)
+        : reconstructed.completedWeight;
+    const weightedMarkTotal = profile.weightedMarkTotal !== undefined && profile.weightedMarkTotal !== null
+        ? Number(profile.weightedMarkTotal)
+        : reconstructed.weightedMarkTotal;
+
+    return {
+        ...profile,
+        completedWeight,
+        weightedMarkTotal,
+        participationMark: completedWeight > 0
+            ? weightedMarkTotal / completedWeight
+            : Number(profile.participationMark || 0)
+    };
+}
+
+function recalculateScenarioOutcomes(profile, scenarios) {
+    return scenarios.map(scenario => {
+        const scenarioWeight = (scenario.participation || [])
+            .filter(session => session.participated)
+            .reduce((sum, session) => sum + (session.assessments || []).reduce(
+                (assessmentSum, assessment) => assessmentSum + Number(assessment.weightPerAssessment || 0), 0
+            ), 0);
+        const totalWeight = profile.completedWeight + scenarioWeight;
+        const targetParticipation = totalWeight > 0
+            ? (profile.weightedMarkTotal + 100 * scenarioWeight) / totalWeight
+            : profile.participationMark;
+
+        return {
+            ...scenario,
+            scenarioWeight: Number(scenarioWeight.toFixed(2)),
+            improvement: Number((targetParticipation - profile.participationMark).toFixed(2)),
+            targetParticipation: Number(targetParticipation.toFixed(2))
+        };
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const storedStudent =
@@ -1617,8 +1694,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const student =
         JSON.parse(storedStudent);
 
-    const profile =
+    let profile =
         JSON.parse(storedProfile);
+
+    const factors = JSON.parse(localStorage.getItem("factorPerformance") || "[]");
+    profile = normalizeAcademicProfile(profile, factors);
+    localStorage.setItem("academicProfile", JSON.stringify(profile));
+
+    const storedScenarios = JSON.parse(localStorage.getItem("evaluatedImprovementScenarios") || "[]");
+    if (storedScenarios.length) {
+        localStorage.setItem(
+            "evaluatedImprovementScenarios",
+            JSON.stringify(recalculateScenarioOutcomes(profile, storedScenarios))
+        );
+    }
 
     // --------------------------------------
     // Check that we are on Phase 3
@@ -1854,10 +1943,11 @@ function generateImprovementOptions() {
     // Current participation mark
     // ------------------------------------------
 
-    const currentParticipation =
-        Number(
-            academicProfile.participationMark
-        );
+    const normalizedProfile = normalizeAcademicProfile(academicProfile, factorPerformance);
+    Object.assign(academicProfile, normalizedProfile);
+    localStorage.setItem("academicProfile", JSON.stringify(academicProfile));
+
+    const currentParticipation = Number(normalizedProfile.participationMark);
 
     console.log(
         "Current Participation:",
@@ -1916,11 +2006,11 @@ function generateImprovementOptions() {
                 (assessmentSum, assessment) => assessmentSum + Number(assessment.weightPerAssessment || 0), 0
             ), 0);
 
-        // Participation is already the weighted contribution of completed marks.
-        // To add delta points, the selected remaining assessments must contribute
-        // delta in total: mark / 100 * selected weight = delta.
+        // Solve for one mark across the selected assessments so the weighted
+        // average of completed and selected assessments reaches current + delta.
         const requiredMarkForScenario = participatedWeight > 0
-            ? (delta * 100) / participatedWeight
+            ? ((currentParticipation + delta) * (normalizedProfile.completedWeight + participatedWeight)
+                - normalizedProfile.weightedMarkTotal) / participatedWeight
             : null;
 
         factorPerformance.forEach(factor => {
@@ -1969,6 +2059,10 @@ function generateImprovementOptions() {
 
             scenario:
                 scenario.scenario,
+
+            selectedAssessments: scenario.participation
+                .filter(session => session.participated)
+                .flatMap(session => session.assessments),
 
             targetImprovement:
                 delta,
@@ -3014,6 +3108,15 @@ function populatePhase4Scenarios(
             ? JSON.parse(storedSessions)
             : [];
 
+    const factorPerformance = JSON.parse(
+        localStorage.getItem("factorPerformance") || "[]"
+    );
+    const storedImprovementScenarios = JSON.parse(
+        localStorage.getItem("uniqueImprovementScenarios") ||
+        localStorage.getItem("improvementScenarios") ||
+        "[]"
+    );
+
 
     console.log(
         "Phase 4 - Remaining Assessment Sessions:",
@@ -3045,7 +3148,7 @@ function populatePhase4Scenarios(
 
         targetImprovementElement.textContent =
             Number.isFinite(targetImprovement)
-                ? "+" + targetImprovement + "%"
+                ? "+" + targetImprovement.toFixed(2) + "%"
                 : "—";
     }
 
@@ -3054,7 +3157,7 @@ function populatePhase4Scenarios(
 
         targetParticipationElement.textContent =
             Number.isFinite(targetParticipation)
-                ? targetParticipation.toFixed(1) + "%"
+                ? targetParticipation.toFixed(2) + "%"
                 : "—";
     }
 
@@ -3097,28 +3200,24 @@ function populatePhase4Scenarios(
                     }
 
 
-                    const assessment =
-                        remainingAssessmentSessions[index];
+                    const category = factorPerformance[index]?.category;
+                    const sourceScenario = storedImprovementScenarios.find(
+                        item => Number(item.scenario) === Number(scenario.scenario)
+                    );
+                    const selectedAssessments = Array.isArray(scenario.selectedAssessments)
+                        ? scenario.selectedAssessments.filter(item => item.category === category)
+                        : (sourceScenario?.participation || [])
+                            .filter(session => session.participated)
+                            .flatMap(session => session.assessments || [])
+                            .filter(item => item.category === category);
 
-
-                    if (!assessment) {
-
-                        console.warn(
-                            "No matching assessment found for required score:",
-                            {
-                                scenario:
-                                    scenario.scenario,
-
-                                index:
-                                    index,
-
-                                requiredScore:
-                                    requiredScore
-                            }
+                    selectedAssessments.forEach(selectedAssessment => {
+                        const assessment = remainingAssessmentSessions.find(item =>
+                            item.category === selectedAssessment.category &&
+                            Number(item.assessmentNumber) === Number(selectedAssessment.assessmentNumber)
                         );
 
-                        return;
-                    }
+                        if (!assessment) return;
 
 
                     // ----------------------------------
@@ -3169,7 +3268,7 @@ function populatePhase4Scenarios(
                     requiredMarkCell.textContent =
                         Number(
                             requiredScore
-                        ).toFixed(1) + "%";
+                        ).toFixed(2) + "%";
 
 
                     // ----------------------------------
@@ -3188,7 +3287,7 @@ function populatePhase4Scenarios(
                         )
                             ? Number(
                                 scenario.targetParticipation
-                            ).toFixed(1) + "%"
+                            ).toFixed(2) + "%"
                             : "—";
 
 
@@ -3216,6 +3315,8 @@ function populatePhase4Scenarios(
                     scenarioTable.appendChild(
                         row
                     );
+
+                    });
 
                 }
             );

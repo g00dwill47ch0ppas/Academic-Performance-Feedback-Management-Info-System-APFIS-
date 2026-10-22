@@ -322,6 +322,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     )
                 );
 
+                localStorage.setItem("studentMode", "returning");
+
 
                 // --------------------------------------
                 // Save imported marks separately
