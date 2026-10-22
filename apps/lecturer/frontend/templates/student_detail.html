@@ -4,7 +4,7 @@
 {% block help %}
     <div class="help-step">
         <span class="help-step-num">1</span>
-        <span class="help-step-text"><strong>Earned so far</strong> is the participation mark from the marks that count, while the <strong>current standing</strong> re-bases it on the work counted so far (so one 80% test reads as 80%, not 8%).</span>
+        <span class="help-step-text"><strong>Earned so far</strong> is the participation mark from the marks that count so far &mdash; the marks a &ldquo;best N of M&rdquo; type drops are left out.</span>
     </div>
     <div class="help-step">
         <span class="help-step-num">2</span>
@@ -16,10 +16,6 @@
     </div>
     <div class="help-step">
         <span class="help-step-num">4</span>
-        <span class="help-step-text">Where a type drops its weakest items, the plan says how many of the remaining items can safely be <strong>skipped</strong>.</span>
-    </div>
-    <div class="help-step">
-        <span class="help-step-num">5</span>
         <span class="help-step-text">Use <strong>Edit details</strong> to change the student's code or marks.</span>
     </div>
 {% endblock %}
@@ -54,22 +50,10 @@
         <span class="muted">out of 100, counting only the marks that are kept</span>
     </div>
     <div class="stat-card">
-        <span class="stat-icon" aria-hidden="true"><svg class="icon"><use href="#i-check"></use></svg></span>
-        <span class="stat-label">Current standing (counted work)</span>
-        <span class="stat-value">{{ participation.standing|r2 }}</span>
-        <span class="muted">the earned mark re-based on what has counted so far</span>
-    </div>
-    <div class="stat-card">
         <span class="stat-icon" aria-hidden="true"><svg class="icon"><use href="#i-min-max"></use></svg></span>
         <span class="stat-label">Feasible region</span>
         <span class="stat-value">{{ region.minimum|r2 }} – {{ region.maximum|r2 }}</span>
         <span class="muted">lowest and highest final mark still reachable</span>
-    </div>
-    <div class="stat-card">
-        <span class="stat-icon" aria-hidden="true"><svg class="icon"><use href="#i-layers"></use></svg></span>
-        <span class="stat-label">Counted slots still open</span>
-        <span class="stat-value">{{ participation.remaining_slots }}</span>
-        <span class="muted">{{ participation.dropped_items|length }} mark(s) currently dropped</span>
     </div>
 </div>
 
@@ -156,36 +140,6 @@
     {% else %}
         <p class="plan-summary">{{ projection.summary }}</p>
 
-        {% if projection.notes %}
-        <ul class="plan-notes">
-            {% for note in projection.notes %}<li>{{ note }}</li>{% endfor %}
-        </ul>
-        {% endif %}
-
-        {% if projection.items %}
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Remaining item</th>
-                        <th>Type</th>
-                        <th>Minimum required (%)</th>
-                        <th>Equivalent mark</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in projection.items %}
-                    <tr>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.type_name }}</td>
-                        <td><strong>{{ item.percentage|r2 }}</strong></td>
-                        <td>{{ item.raw_mark|r2 }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% endif %}
     {% endif %}
 </div>
 

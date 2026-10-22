@@ -69,7 +69,7 @@
         },
         {
             id: "cohort",
-            title: "Cohort planning",
+            title: "Class average planning",
             blurb:
                 "Set a target and a weight range for every assessment, run the optimiser " +
                 "and read its result."
@@ -97,7 +97,7 @@
             title: "Your pages and your modules",
             text:
                 "The top of the panel is the page list — Overview, At-risk students, Students, " +
-                "Enter marks, Assessment plan, Cohort planning, Settings and Tutorial. Below it " +
+                "Enter marks, Assessment plan, Class average planning, Settings and Tutorial. Below it " +
                 "is the module switcher: each module keeps its own plan, students and pass " +
                 "threshold, so switching never mixes their data."
         },
@@ -349,8 +349,8 @@
             title: "Record a mark",
             text:
                 "Type each student's mark and save the page. A blank stays “not yet written”. " +
-                "These marks drive the participation mark, the at-risk bounds and cohort " +
-                "planning.",
+                "These marks drive the participation mark, the at-risk bounds and class " +
+                "average planning.",
             hint: "Type a mark (for example 70) — or use “Fill an example for me”."
         },
         {
@@ -449,9 +449,8 @@
             section: "results",
             title: "What each remaining item needs",
             text:
-                "Every remaining item is planned for — none is treated as a zero. The table " +
-                "gives the minimum percentage each item needs for the target, and where the " +
-                "plan drops the weakest marks it says how many items can be skipped instead. " +
+                "Every remaining item is planned for — none is treated as a zero. The summary " +
+                "gives the minimum percentage each remaining item needs to reach the target. " +
                 "If the whole region sits below the pass mark, the page says so plainly.",
             missing:
                 "This student has nothing left to write, so the mark is already fixed and " +
@@ -465,10 +464,10 @@
             inMenu: true,
             title: "Plan the assessment weights",
             text:
-                "Cohort planning is where the model searches for a different spread of weights. " +
+                "Class average planning is where the model searches for a different spread of weights. " +
                 "It is a what-if tool: it shows what the plan could look like, and nothing " +
                 "changes until you edit the plan yourself.",
-            hint: "Click Cohort planning in the panel."
+            hint: "Click Class average planning in the panel."
         },
         {
             route: "/cohort",

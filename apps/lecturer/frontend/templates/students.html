@@ -19,17 +19,15 @@
 
 {% if rows %}
 <div class="panel">
-    <h2>Cohort list</h2>
+    <h2>Class list</h2>
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
                     <th>Student</th>
                     <th>Participation so far</th>
-                    <th>Standing</th>
-                    <th>Min</th>
-                    <th>Max</th>
-                    <th>Dropped</th>
+                    <th>Minimum participation %</th>
+                    <th>Maximum participation %</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -39,19 +37,8 @@
                 <tr class="{{ 'at-risk-row' if row.at_risk else '' }}">
                     <td>{{ row.student_code }}</td>
                     <td>{{ row.accrued|r2 }}</td>
-                    <td>{{ row.standing|r2 }}</td>
                     <td>{{ row.min_pmark|r2 }}</td>
                     <td>{{ row.max_pmark|r2 }}</td>
-                    <td>
-                        {% if row.dropped_count %}
-                            <span class="badge badge-dropped"
-                                  title="The weakest marks of a &ldquo;best N of M&rdquo; type are dropped and do not count.">
-                                {{ row.dropped_count }}
-                            </span>
-                        {% else %}
-                            <span class="muted">&mdash;</span>
-                        {% endif %}
-                    </td>
                     <td>
                         {% if row.at_risk %}
                             <span class="badge badge-danger">
@@ -126,7 +113,7 @@
     </div>
     <div class="help-step">
         <span class="help-step-num">4</span>
-        <span class="help-step-text">Open the <strong>navigation panel</strong> (top-right button) to switch modules or reach the assessment plan and cohort planner.</span>
+        <span class="help-step-text">Open the <strong>navigation panel</strong> (top-right button) to switch modules or reach the assessment plan and class average planner.</span>
     </div>
 {% endblock %}
 {% endblock %}

@@ -328,7 +328,7 @@
                class="settings-link{{ ' active' if request.endpoint == 'cohort.cohort_planning' else '' }}"
                {% if request.endpoint == 'cohort.cohort_planning' %}aria-current="page"{% endif %}>
                 <svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg>
-                <span class="settings-link-text">Cohort planning</span>
+                <span class="settings-link-text">Class average planning</span>
             </a>
             <a href="{{ url_for('home.settings') }}"
                class="settings-link{{ ' active' if request.endpoint == 'home.settings' else '' }}"

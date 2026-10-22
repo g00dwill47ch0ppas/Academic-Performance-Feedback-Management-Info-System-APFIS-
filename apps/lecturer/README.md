@@ -76,12 +76,11 @@ pytest tests/ -v      # 108 tests
 - **Participation planning (Algorithm 2)** — from a *feasible region* to a target:
   the page shows the lowest and highest final participation mark a student can still
   reach (with their mark so far and the pass threshold marked on the same bar), the
-  lecturer picks an **absolute target** inside that region, and the plan then lists
-  every remaining item with the minimum percentage it needs. Nothing is treated as a
-  zero. Where a type drops its weakest marks the page says how many remaining items
-  can be skipped and what the others must then reach, and if the whole region sits
-  below the pass mark it says plainly that passing is no longer possible.
-- **Cohort planning (Algorithm 3, scipy SLSQP)** — the lecturer sets a target class
+  lecturer picks an **absolute target** inside that region, and the plan then states
+  the minimum percentage every remaining item needs to reach it. Nothing is treated
+  as a zero, and if the whole region sits below the pass mark it says plainly that
+  passing is no longer possible.
+- **Class average planning (Algorithm 3, scipy SLSQP)** — the lecturer sets a target class
   average and a weight *range* `[min%, max%]` per assessment; those ranges are the
   constraints of the optimisation:
   - every assessment keeps a strictly positive weight (a 1% floor is enforced),
@@ -112,7 +111,7 @@ pytest tests/ -v      # 108 tests
   navigation, and can be replayed any time from the menu (Tutorial) or the dedicated
   **Tutorial** page, which also carries a written summary of the workflow. Too long to
   sit through? The Tutorial page also lets you run **just one part** — create a module,
-  assessment plan, students & marks, results & at-risk, or cohort planning — each starting
+  assessment plan, students & marks, results & at-risk, or class average planning — each starting
   on its own page with its own “step x of y” counter.
 - **Light/dark theme** remembered per browser; responsive layout down to phone widths.
 
@@ -157,7 +156,7 @@ reference project:
   remembered per browser.
 
 Presentational only — every calculation remains in `backend/algorithms/`. The
-cohort-planning page only supplies the constraints (the lecturer's weight ranges);
+class-average-planning page only supplies the constraints (the lecturer's weight ranges);
 the published Algorithm 3 objective is unchanged.
 
 ## A note on the tech stack
