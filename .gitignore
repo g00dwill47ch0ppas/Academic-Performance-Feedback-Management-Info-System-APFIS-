@@ -1,0 +1,17 @@
+# Python environments and generated files
+.venv/
+.venv-*/
+**/.venv/
+**/.venv-*/
+__pycache__/
+*.py[cod]
+*.log
+.env
+
+# Node and Remotion dependencies/cache
+node_modules/
+**/node_modules/
+.remotion/
+
+# Film preview stills are reproducible; keep the final MP4 in version control
+product-film/output/stills/

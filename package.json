@@ -1,0 +1,15 @@
+{
+	"dependencies": {
+		"react": "^19.3.1",
+		"react-dom": "^19.3.1",
+		"remotion": "^4.0.539",
+		"@remotion/cli": "^4.0.539",
+		"@remotion/google-fonts": "^4.0.539",
+		"@remotion/media-utils": "^4.0.539"
+	},
+	"scripts": {
+		"film:preview": "remotion studio product-film/src/index.tsx",
+		"film:render": "remotion render product-film/src/index.tsx APFISProductFilm product-film/output/apfis-product-film.mp4 --codec=h264 --crf=23",
+		"film:stills": "remotion still product-film/src/index.tsx APFISProductFilm"
+	}
+}
